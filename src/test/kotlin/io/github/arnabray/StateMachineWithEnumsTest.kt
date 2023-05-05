@@ -134,7 +134,7 @@ class StateMachineWithEnumsTest {
             StateMachine.create<State, Event, String> {}
         }
 
-        assertThat(thrown.message).isEqualTo("Required value was null.")
+        assertThat(thrown.message).isEqualTo("Initial state of the state machine is absent")
     }
 
     @Test

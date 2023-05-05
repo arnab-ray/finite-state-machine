@@ -47,7 +47,8 @@ class TransitionGraphBuilder<T, U, V>(
      * This builds the state machine graph
      */
     fun build(): TransitionGraph<T, U, V> {
-        return TransitionGraph(requireNotNull(initialState), stateDefinitions.toMap(), onTransitionListeners.toList())
+        requireNotNull(initialState) { "Initial state of the state machine is absent" }
+        return TransitionGraph(initialState!!, stateDefinitions.toMap(), onTransitionListeners.toList())
     }
 
     inner class StateDefinitionBuilder<S : T> {

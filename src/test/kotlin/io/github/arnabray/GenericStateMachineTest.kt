@@ -112,7 +112,7 @@ class GenericStateMachineTest {
             StateMachine.create<State, Event, TransitionEffect> {}
         }
 
-        assertThat(thrown.message).isEqualTo("Required value was null.")
+        assertThat(thrown.message).isEqualTo("Initial state of the state machine is absent")
     }
 
     @Test
