@@ -13,44 +13,6 @@ class TransitionGraphBuilder<T, U, V>(
     private val stateDefinitions = LinkedHashMap(transitionGraph?.matcherStateMap ?: emptyMap())
     private val onTransitionListeners = ArrayList(transitionGraph?.onTransitionListeners ?: emptyList())
 
-    /**
-     * This sets the initial state of the state machine
-     */
-    fun setInitialState(initialState: T) {
-        this.initialState = initialState
-    }
-
-    fun <S : T> state(
-        eventMatcher: EventMatcher<T, S>,
-        init: StateDefinitionBuilder<S>.() -> Unit
-    ) {
-        stateDefinitions[eventMatcher] = StateDefinitionBuilder<S>().apply(init).build()
-    }
-
-    inline fun <reified S : T> state(noinline init: StateDefinitionBuilder<S>.() -> Unit) {
-        state(EventMatcher.any(), init)
-    }
-
-    inline fun <reified S : T> state(state: S, noinline init: StateDefinitionBuilder<S>.() -> Unit) {
-        state(EventMatcher.eq<T, S>(state), init)
-    }
-
-    /**
-     * This method adds listener for the transition effect.
-     * In this block it is expected to define the effects of the transition
-     */
-    fun onTransition(listener: suspend (Transition<T, U, V>) -> Unit) {
-        onTransitionListeners.add(listener)
-    }
-
-    /**
-     * This builds the state machine graph
-     */
-    fun build(): TransitionGraph<T, U, V> {
-        requireNotNull(initialState) { "Initial state of the state machine is absent" }
-        return TransitionGraph(initialState!!, stateDefinitions.toMap(), onTransitionListeners.toList())
-    }
-
     inner class StateDefinitionBuilder<S : T> {
 
         private val stateDefinition = TransitionGraph.State<T, U, V>()
@@ -103,5 +65,40 @@ class TransitionGraphBuilder<T, U, V>(
         fun S.doNotTransition(transitionEffect: V? = null) = transitionTo(this, transitionEffect)
 
         fun build() = stateDefinition
+    }
+
+    /**
+     * This sets the initial state of the state machine
+     */
+    fun setInitialState(initialState: T) {
+        this.initialState = initialState
+    }
+
+    fun <S : T> state(eventMatcher: EventMatcher<T, S>, init: StateDefinitionBuilder<S>.() -> Unit) {
+        stateDefinitions[eventMatcher] = StateDefinitionBuilder<S>().apply(init).build()
+    }
+
+    inline fun <reified S : T> state(noinline init: StateDefinitionBuilder<S>.() -> Unit) {
+        state(EventMatcher.any(), init)
+    }
+
+    inline fun <reified S : T> state(state: S, noinline init: StateDefinitionBuilder<S>.() -> Unit) {
+        state(EventMatcher.eq<T, S>(state), init)
+    }
+
+    /**
+     * This method adds listener for the transition effect.
+     * In this block it is expected to define the effects of the transition
+     */
+    fun onTransition(listener: suspend (Transition<T, U, V>) -> Unit) {
+        onTransitionListeners.add(listener)
+    }
+
+    /**
+     * This builds the state machine graph
+     */
+    fun build(): TransitionGraph<T, U, V> {
+        requireNotNull(initialState) { "Initial state of the state machine is absent" }
+        return TransitionGraph(initialState!!, stateDefinitions.toMap(), onTransitionListeners.toList())
     }
 }
