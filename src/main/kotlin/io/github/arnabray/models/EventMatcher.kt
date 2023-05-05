@@ -1,5 +1,8 @@
 package io.github.arnabray.models
 
+/**
+ * A generic matcher to match states of the state machine
+ */
 class EventMatcher<T, out R : T> private constructor(private val clazz: Class<R>) {
     companion object {
         fun <T, R : T> any(clazz: Class<R>): EventMatcher<T, R> = EventMatcher(clazz)

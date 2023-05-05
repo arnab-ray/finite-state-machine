@@ -50,7 +50,7 @@ internal class StateOfMatterStateMachineTest {
     private val logger = mockk<Logger>()
 
     private val stateMachine = StateMachine.create<State, Event, TransitionEffect> {
-        initialState(State.Solid)
+        setInitialState(State.Solid)
         state<State.Solid> {
             on<Event.Melt> {
                 transitionTo(State.Liquid, TransitionEffect.LogMelted)
@@ -181,6 +181,6 @@ internal class StateOfMatterStateMachineTest {
     }
 
     private fun getStateMachineWithInitialState(state: State): StateMachine<State, Event, TransitionEffect> {
-        return stateMachine.with { initialState(state) }
+        return stateMachine.with { setInitialState(state) }
     }
 }

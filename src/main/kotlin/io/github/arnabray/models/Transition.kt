@@ -1,7 +1,7 @@
 package io.github.arnabray.models
 
 /**
- * The concrete class that defines a transition from one STATE to another
+ * This class defines a transition from one STATE to another. Tags the transition as Valid or Invalid.
  */
 sealed class Transition<out T, out U, out V> {
     abstract val fromState: T

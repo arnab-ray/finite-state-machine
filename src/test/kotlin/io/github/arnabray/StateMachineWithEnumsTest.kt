@@ -68,7 +68,7 @@ class StateMachineWithEnumsTest {
     private val logger = mockk<Logger>()
 
     private val stateMachine = StateMachine.create<State, Event, String> {
-        initialState(State.A)
+        setInitialState(State.A)
         state(State.A) {
             on(Event.E1) {
                 transitionTo(State.B)
